@@ -1,8 +1,25 @@
 <template>
-    <div>{{ day }}</div>
+    <div :class="classObject" @click="captureClick">{{ day.format('D') }}</div><!--day is a moment object so we can use the format method that is included with day-->
 </template>
+
 <script>
     export default {
-        props: [ 'day' ]
+        props: [ 'day' ],
+        computed: {
+            classObject(){
+                let today = this.day.isSame(this.$moment(), 'day');
+                return {
+                  day: true,
+                  today,
+                  past: this.day.isSameOrBefore(this.$moment(), 'day') && !today
+                };
+            }
+        },
+        methods: {
+            captureClick(event){
+                this.$store.commit('eventFormPos', { x: event.clientX, y: event.clientY});
+                this.$store.commit('eventFormActive', true);
+            }
+        }
     }
 </script>
