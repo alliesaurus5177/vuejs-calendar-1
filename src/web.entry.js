@@ -9,19 +9,15 @@ Object.defineProperty(Vue.prototype, '$moment', { get() { return this.$root.mome
 
 import App from './components/App.vue';
 
-/*let events = [
-    { description: 'Random event 1', date: moment('2017-02-06', 'YYYY-MM-DD') },
-    { description: 'Random event 2', date: moment('2017-02-15', 'YYYY-MM-DD') },
-    { description: 'Random event 3', date: moment('2017-03-14', 'YYYY-MM-DD') }
-];*/
 
+//once page refreshes acn call initial state, which contains events.
 let events = window.__INITIAL_STATE__.map(event => {
     return {
         description: event.description,
         date: moment(event.date)
     }
 });
-
+//Create InitialState object to put in our Store to grab events
 let initialState = Object.assign({}, store.state, { events });
 console.log(initialState);
 store.replaceState(initialState);
@@ -34,5 +30,15 @@ new Vue({
     components: {
         App
     },
-    store
+    store, //replaces <div id="app"> div in index
+        render(createElement) {
+           return createElement(
+                'div',
+                { attrs: { id:'app' } },
+                [
+                    createElement('app') //creates <app></app> nested in div id "app"
+                ]
+            );
+        }
+
 });
